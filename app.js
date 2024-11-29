@@ -39,19 +39,22 @@ app.engine("ejs", ejsMate);
 
 main().then(()=> console.log("Connected to Db")).catch(err => console.log(err));
 
-const dbUrl= process.env.ATLASDB_URL;
+const dbUrl= process.env.ATLASDB_URL  ||  'mongodb://127.0.0.1:27017/wanderlust';
 // console.log(process.env.ATLASDB_URL);
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
-//   const dbUrl= process.env.ATLASDB_URL;
-//   await mongoose.connect(dbUrl);
+//   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+  const dbUrl= process.env.ATLASDB_URL;
+  await mongoose.connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 }
 
 
 const store= MongoStore.create({
-    // mongoUrl: dbUrl,
-    mongoUrl: "mongodb://127.0.0.1:27017/wanderlust",
+    mongoUrl: dbUrl,
+    // mongoUrl: "mongodb://127.0.0.1:27017/wanderlust",
     crypto: {
         secret: process.env.SECRET,
     },
